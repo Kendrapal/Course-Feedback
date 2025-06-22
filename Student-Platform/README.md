@@ -1,4 +1,4 @@
-# Academic Course Feedback Registry Smart Contract
+# Blockchain-Based Student Evaluation Platform Smart Contract
 
 A comprehensive blockchain-based platform for managing academic course evaluations in a decentralized environment. This smart contract enables students to submit anonymous feedback and ratings for courses while providing instructors and administrators with transparent tools to manage course offerings and analyze student satisfaction metrics.
 

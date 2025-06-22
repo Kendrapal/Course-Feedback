@@ -201,22 +201,23 @@
 
 ;; Updates instructor assignment for an existing course
 (define-public (reassign-course-instructor (course-unique-id uint) (new-instructor-address principal))
-  (match (retrieve-course-information course-unique-id)
-    existing-course-data
-      (begin
-        ;; Only administrators can reassign instructors
-        (asserts! (has-admin-privileges) ERR-ADMIN-PRIVILEGES-REQUIRED)
-        
-        ;; Update instructor assignment
-        (map-set academic-course-catalog
-          { course-unique-id: course-unique-id }
-          (merge existing-course-data 
-                 { assigned-instructor: new-instructor-address })
-        )
-        
-        (ok true)
-      )
-    ERR-COURSE-DOES-NOT-EXIST
+  (let (
+    (course-info (retrieve-course-information course-unique-id))
+  )
+    ;; Only administrators can reassign instructors
+    (asserts! (has-admin-privileges) ERR-ADMIN-PRIVILEGES-REQUIRED)
+    
+    ;; Verify course exists before proceeding
+    (asserts! (is-some course-info) ERR-COURSE-DOES-NOT-EXIST)
+    
+    ;; Update instructor assignment using validated course data
+    (map-set academic-course-catalog
+      { course-unique-id: course-unique-id }
+      (merge (unwrap-panic course-info)
+             { assigned-instructor: new-instructor-address })
+    )
+    
+    (ok true)
   )
 )
 
